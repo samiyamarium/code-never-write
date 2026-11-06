@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Code You Never Write: Process Flows</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fff0f6;--card:#fff;--ink:#4a2236;--mute:#9a6b82;--line:#f4c4d8;--chip:#fde4ee;--chipb:#eb9fbd;--acc:#c2467f;--ai:#fde0ea;--aib:#e9739d;--hu:#ece4fa;--hub:#9b83d6;--co:#e3f4e7;--cob:#7fbf8f;--wa:#fff1d6;--wab:#e5a94a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a1420;--card:#381b2a;--ink:#ffe3ef;--mute:#d3a1b9;--line:#6a2f4b;--chip:#4a2338;--chipb:#b5587f;--acc:#ff9cc4;--ai:#5a2440;--aib:#e9739d;--hu:#3b2f63;--hub:#a490e0;--co:#244a33;--cob:#6fc08a;--wa:#5a4420;--wab:#e5b05a}}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Helvetica Neue",Arial,sans-serif}
+header{background:linear-gradient(135deg,#ffd9e9,#f7b8d3);padding:36px 20px 28px;color:#5a1f3e;border-bottom:1px solid var(--line)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) header{background:linear-gradient(135deg,#4a2236,#5e2b47);color:#ffe3ef}}
+.w{max-width:920px;margin:0 auto}
+h1{font-size:26px;margin:0 0 6px}header p{margin:0;opacity:.85}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;font-size:12px}
+nav{background:var(--card);border-bottom:1px solid var(--line);padding:10px 20px;font-size:13px}
+nav a{color:var(--acc);text-decoration:none;margin-right:14px;white-space:nowrap}
+h2{font-size:19px;margin:34px 0 4px;color:var(--acc);border-bottom:2px solid var(--line);padding-bottom:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.card h3{margin:0 0 2px;font-size:16px}.where{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.note{color:var(--mute);font-size:13px;margin:4px 0 12px}
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px 0}
+.chip{background:var(--chip);border:1px solid var(--chipb);border-radius:9px;padding:7px 11px;font-size:13px;max-width:100%}
+.chip.a{background:var(--ai);border-color:var(--aib)}.chip.h{background:var(--hu);border-color:var(--hub)}.chip.c{background:var(--co);border-color:var(--cob)}.chip.w{background:var(--wa);border-color:var(--wab)}
+.chip small{display:block;color:var(--mute);font-size:11px;margin-top:2px}
+.ar{align-self:center;color:var(--acc);padding:0 6px;font-weight:700}
+.loop{font-size:12px;color:var(--acc);margin-top:8px}
+.fan{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.fan .br{display:flex;flex-direction:column;gap:7px;flex:1;min-width:230px;border-left:2px solid var(--chipb);padding-left:12px}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0}
+.row .chip:first-child{flex:1 1 200px}.row .chip:last-child{flex:1.4 1 240px}
+.deck{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:26px 0 8px}.deck h3{margin:0 0 4px;font-size:16px}.frame{position:relative;padding-top:56.25%;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--chip);margin-top:10px}.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.btn{display:inline-block;margin-top:12px;background:var(--acc);color:#fff;text-decoration:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600}
+footer{color:var(--mute);font-size:12px;padding:24px 20px 40px}
+:root{--fw:46px;--fl:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='76' viewBox='0 0 56 76'><g transform='translate(28 28)'><g fill='%23b9a3e3' fill-opacity='.9'><ellipse rx='5' ry='11' cy='-9' transform='rotate(0)'/><ellipse rx='5' ry='11' cy='-9' transform='rotate(72)'/><ellipse rx='5' ry='11' cy='-9' transform='rotate(144)'/><ellipse rx='5' ry='11' cy='-9' transform='rotate(216)'/><ellipse rx='5' ry='11' cy='-9' transform='rotate(288)'/></g><circle r='4' fill='%23f6d36b'/></g><path d='M28 44V74' stroke='%237fae7a' stroke-width='2' fill='none'/><ellipse cx='21' cy='57' rx='6' ry='3' fill='%238fbf8a' transform='rotate(-30 21 57)'/><ellipse cx='35' cy='65' rx='6' ry='3' fill='%238fbf8a' transform='rotate(30 35 65)'/></svg>")}
+body{padding:0 var(--fw)}
+body::before,body::after{content:"";position:fixed;top:0;bottom:0;width:var(--fw);z-index:5;pointer-events:none;background:var(--fl) center top/var(--fw) auto repeat-y,var(--line)}
+body::before{left:0;border-right:2px solid var(--chipb)}body::after{right:0;border-left:2px solid var(--chipb)}
+header{position:relative;margin:0 calc(var(--fw)*-1);padding-left:calc(var(--fw) + 20px);padding-right:calc(var(--fw) + 20px)}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-26px;height:28px;background:var(--fl) center top/auto 28px repeat-x;z-index:2;pointer-events:none}
+nav{margin:26px 0 0;border:1px solid var(--line);border-radius:10px}
+.card{border-width:2px;box-shadow:0 2px 0 var(--line)}
+h2{border-bottom:2px dotted var(--chipb)}
+@media (max-width:600px){:root{--fw:30px}}
+</style></head><body>
+<header><div class="w"><h1>Code You Never Write</h1>
+<p>Every named process, test, procedure and framework from the crash course, drawn as a flow. Wording is as given on the page.</p>
+<div class="legend"><span class="chip">Step</span><span class="chip a">AI</span><span class="chip c">Collaborative</span><span class="chip h">Human</span><span class="chip w">Flagged / problem</span></div></div></header>
+<nav><div class="w" id="nav"></div></nav>
+<main class="w" style="padding:0 20px" id="app"></main>
+<footer class="w">Source: agentfactory.panaversity.org/docs/code-you-never-write-crash-course</footer>
+<script>
+const S=[
+["Overview",[
+["The core move","Intro","chain",["Describe the problem in plain words","Let the AI write and run the code","Check what it did"],"You are not learning to write code. You are learning to be a good client for code."],
+["The four parts, in brief","The four parts","chain",["1. The deal|code is no longer gated by the ability to write it","2. Commissioning code|force compute, brief, check, handle errors, keep the script","3. Five surfaces|browser chat, terminal in your folder, desktop app","4. Power, safely held|four rules shrink what a mistake can cost"]],
+["Prove it in two minutes","Prove it in two minutes","chain",["Paste expenses; ask: write and run code, show me it ran","The AI writes a small program and computes the totals","Hand-check: 4,250 + 2,890 + 3,120","Does it match what your code reported?|the seed of Concept 6"]],
+["By the end, you can","What you need","chain",["Spot a code problem","Write a five-section code brief","Force computation over estimation","Check a result you cannot read","Run scripts safely on real files","Keep what you build"]],
+["The 30-minute path","Short on time?","chain",["Read Concepts 3 to 6","Run each one’s Do this now box","Come back later for Part 3, Concept 12, and the Projects"]]]],
+["Part 1: The deal",[
+["AI is the developer, you are the client","1. Code is no longer gated by coding","chain",["AI writes working code|small, well-described problems","AI runs the code itself|in a sandbox, or on your machine with permission","AI repairs the code itself|the error message goes back to the AI"],"The unit of work changes: not ‘can I write this?’ but ‘can I describe this?’"],
+["How the AI picks the language","2. What code actually is","fan","You describe what you want back",[["A number, file, or report","Python"],["A thing you click or open in a browser","JavaScript or TypeScript"]],"You never choose. The choice follows the output."],
+["Code is exact, in both directions","2","fan","Code is exact",[["Good","Computes your totals to the last cent, any number of times"],["w:Dangerous","Does exactly what it was told, including the wrong thing, perfectly, at scale"]],"Power and danger come from the same property."],
+["The dividing line","3. The dividing line","fan","Is this a question for the AI’s mind, or a job for the AI’s hands?",[["a:Answer problem","The AI replies from its own reasoning: draft, advise, summarize, explain, judge an idea"],["c:Code problem","The AI writes and runs code on your real data: total, merge, scan, rename, clean, reconcile, chart, automate"]]],
+["Four signals: VPRF","3","map",[["Volume","More items than you would do by hand"],["Precision","A wrong digit has consequences"],["Repetition","You will face this task again"],["Files","The problem lives in files, not in sentences"]],"Any one of them is enough. If a task fires none, it is an answer problem."],
+["The trap","3","chain",["A problem that looks like an answer problem|‘Roughly how did my sales trend?’","w:It fires Precision if a decision rests on the number","It is a code problem, however casually phrased|Concept 4 is the fix"]]]],
+["Part 2: Commissioning code",[
+["Make the AI’s hands move: three lines","4. Automatic vs. explicit","chain",["Write and run code to answer this|forces computation","Show me the code you ran|gives you proof","Before analyzing anything, tell me the exact row count, the column names, and the date range|the cheapest lie detector"],"Say ‘code’, never ‘Python’: you tell the AI to compute, never which language."],
+["How your phrasing steers the AI","4","map",[["‘What does this data show?’","Glance-based summary, maybe code: estimates dressed as facts"],["‘Roughly how did costs trend?’","Almost always a glance: ‘roughly’ says precision does not matter"],["‘Write and run code to compute cost by month.’","Code, every time"],["‘Are you running code on this file, or estimating? If estimating, stop and run code instead.’","The AI names its method, then computes"]]],
+["The tell","4","chain",["A reply about your data with no code block, no row counts, no ‘here is what I computed’","w:An opinion about your data, not an analysis of it"]],
+["The five-section code brief","5. Brief the problem, not the program","chain",["Goal|what problem is solved when this works","Input|files, format, roughly how many rows or items","Output|what exactly I want back","Rules *|constraints a stranger would not know","Edge cases *|what happens when the data is imperfect"],"The two starred sections, Rules and Edge cases, are the ones beginners skip."],
+["Inspect, ask, then brief","5","chain",["Before doing anything, examine the files and tell me what could be unclear, inconsistent, or surprising","The AI reports: 14 blank dates, two currency formats. What should I do with each?","Write the Edge cases section with knowledge instead of imagination"]],
+["The edge-case sentence","5","chain",["If you hit a row you cannot read, do not guess","Skip it, and list every skipped row at the end","Silent damage becomes a visible report"]],
+["The verification ladder","6. Verifying work you cannot read","chain",["1. Known-answer test|run it on a small part whose answer you already know","2. Reality questions|rows in versus rows out; does the biggest customer match?","3. Plain-English replay|the AI’s own account of what its code did","4. Adversarial pass|ask the AI to attack its own work","5. Cross-model check|same brief in a second AI; compare the numbers"],"Rising order of effort. The first three cover most situations."],
+["Minimum verification by stakes","6","map",[["Personal curiosity (your own spending)","Reality questions"],["Work a colleague relies on","Known-answer test and plain-English replay"],["Money, grades, health, anything signed","All five, and a human reviews the claims that matter"]]],
+["The pharmacist’s trap","6","chain",["Add one fake gap of 10 units to a copy of the data","The script catches the fake gap, plus four real ones","Catching the fake one let her believe the four"],"Add one known error to your data and see if the code finds it."],
+["Mutation testing, in short","6","chain",["Break the main code on purpose, one small change at a time","See whether any test notices","w:A test that stays silent while the code is wrong proves nothing"],"Uncle Bob built the checks first. Not reading was what the checks allowed."],
+["The one thing you never skip","6","chain",["A precision-critical number","Test it against one answer you independently know","Then act on it"]],
+["When it breaks: three patterns","7. Errors are dialogue","map",[["Red text, script stopped","Paste the full error and say ‘diagnose, fix, rerun’"],["Runs, but a number contradicts what you know","State the symptom and the value you expected; ask for row counts and sample rows before fixing"],["Same fix fails three times in a row","Stop digging: restate the problem fresh, propose two completely different approaches"]]],
+["Wrong-but-running","7","chain",["State the symptom|total is 4.2 million","State the value you expected|around 12 million","Ask it to inspect first|row count, date range, first 5 rows as the code sees them","Then fix"]],
+["Three strikes","7","chain",["Same fix fails three times","Step back: restate the problem fresh","Propose two completely different approaches","Chat long and confused? Start a clean one with the brief and what you learned"]],
+["Keep the script: three-part habit","8. Keep the script","chain",["Ask for the script as a file|plain-English description at the top","Keep the brief next to the script|the Intent Layer","Give the pair a home in one folder"],"A script written once is something you own forever."],
+["The folder","8","fan","my-scripts/: one subfolder per task",[["brief.md","What and why, in your words"],["script (e.g. submissions.py)","The code: you still never read it"],["sample input folder","Inputs whose correct answer you know: tomorrow’s known-answer test"]]],
+["Without versus with the habit","8","map",[["Every month, re-explain the task from memory","Every month: ‘run the script on the new files’"],["Subtle rule drift between months","Rules frozen in the script: identical logic every run"],["Your AI skill helps only you","Hand the folder to a colleague: productive in minutes"]],"Describe once, run forever, hand to anyone."]]],
+["Part 3: One problem, five surfaces",[
+["Five surfaces, one graduation path","9 to 11","fan","Start here: browser chat (Claude.ai, ChatGPT, Gemini). Temporary sandbox, nothing to install. Graduate when uploads annoy you",[["Terminal","Claude Code, OpenCode: a chat box in a folder; scripts stay, can run on a schedule"],["Desktop app","Cowork, OpenWork: plan-then-approve built in; mistakes touch real files"]]],
+["Choosing a surface","11","map",[["One-off question about a file or a few files","Claude.ai (or ChatGPT / Gemini)"],["Learning, exploring, or a borrowed computer","Claude.ai: the sandbox cannot hurt anything"],["The problem lives in your folders and you will repeat it","Claude Code or OpenCode"],["You want an app and a plan to approve before anything moves","Cowork or OpenWork"],["The task must run on a schedule or touch other systems","Claude Code or OpenCode"]]],
+["The running job on Claude.ai","9","chain",["1. Merge all 12 CSVs|confirm row count and all 12 months before going further","2. Total spending by category and by month","3. Flag likely duplicates|list them, don’t delete anything","4. One-page HTML report|trend chart, category table, duplicates list, three observations"],"Rules: commas as thousand separators; refunds negative; unparseable rows skipped and listed."],
+["The running job in a terminal agent","10","chain",["No attachments: the files are simply there","The agent writes the code and runs it","It hits the comma-separator problem and fixes it itself","report.html and monthly-report.py appear in the folder"]],
+["Plan-then-approve","11","chain",["The app writes a plan","You read the plan in plain English|catch the wrong assumption before anything runs","You approve","The code runs"],"Concept 6’s plain-English replay, moved before the work instead of after."]]],
+["Part 4: Power, safely held",[
+["Blast radius: four rules","12. Blast radius","map",[["Rule 1: Work on copies until a script has earned trust","‘First copy the folder to expenses-2025-backup, then work only on the original.’"],["Rule 2: See changes before they happen","Dry run: ‘Don’t change anything yet. Show me the full list of operations, old name next to new name, and wait for my approval.’"],["Rule 3: Point the agent at the smallest folder","Never your home directory, never Documents, never the whole disk"],["Rule 4: Write output to new files, never over the originals","Every run can be undone by deleting the new file"]],"Blast radius: the worst thing that can happen if a run goes wrong."],
+["The four rules in three sentences","12","chain",["Copy the folder to a backup first","Show me your plan of operations before changing anything, and wait for approval","Write all output to new files. Never modify the originals"]],
+["Permission ladder","12","chain",["Give a tool a little freedom first","Watch what it does","Give it more|trust goes to specific scripts with a track record"]],
+["The researcher’s dry run","12","chain",["Dry-run list: 40 proposed deletions","Six were wrongly grouped|different interviews, identical lengths","Corrected rule: match on content, not name and size","Run the dry run again","Approve 34 true deletions"]],
+["The edge of the map","13","map",[["w:Software other people log into","Products, not scripts"],["w:Always-on automation with real consequences","A worker that runs itself is a Digital FTE"],["w:High-stakes acts with no undo","Let code prepare; let a human send"],["w:Judgment wearing a computation costume","Code computes. You decide."]]]]],
+["Projects",[
+["Pick your own data: the off-the-shelf-app test","Projects","fan","Has a company already built an app for exactly this?",[["Yes","The wrong problem for here: an app exists only when the rules are the same for everybody"],["No","A market of one: your rules, your mess, an answer only you can confirm"]]],
+["Project 1: Money Detective","Project 1","chain",["Rehearse on the sample wallet, then your real export","Earn trust backstage|total in should be 23,000; PrimeVideo 796","Make it explain itself|plain-English replay","What it catches|forgotten subscription, double charge, the real leak","Your one sentence to a real person","Keep the tool for next month"],"Done when: the code reproduces two numbers you knew, hands you one true thing to act on, and you have a saved script."],
+["Project 2: What’s My Grade, Really","Project 2","chain",["Gather real scores and the teacher’s exact rules","Brief: work out my real grade following every rule; show each subtotal","Earn trust|homework 92, 88, 90, 85 averages 88.75","The catch|the real grade, and what you need on the final","Save it as a ‘what do I need on the final’ script"]],
+["Project 3: The Books Don’t Match","Project 3","chain",["Your counted total is the known answer|4,000 owed across eight people","Add the rules only you know|Ali’s 1,000 covers two; pizza is not dues; flag the unknown 500","Reconcile: who’s paid, who still owes, how much is unaccounted for","The catch|a specific name to chase or payment to place","Save it as your reconciliation script"]],
+["Project 4: Photo Gallery Rescue","Project 4","chain",["Find duplicates|perceptual hash; don’t delete anything yet","Safety gate|keep the largest copy, list the deletions, back up the originals, wait for approval","Review the list|spare the false match","Approve the rest","Sort what is left by date, newest first, into a copy"],"Done when: a real duplicate count, a false match caught, a backup exists, survivors sorted."],
+["If you get stuck mid-project","Stuck","map",[["It can’t open or read my export","Ask exactly what is wrong with the file and what to re-export it as"],["It answered, but I never saw a code block","Say the words again: write and run code, show the code, row count first"],["The number doesn’t match what I know","Report it as a symptom: your total is X, I counted Y; show row count, date range, first five rows"],["The same fix keeps failing","Three strikes: restate fresh and propose two completely different approaches"],["My file has private data","Make a cleaned copy with names and account numbers removed; work only on that copy"],["I ran out of free-tier usage","Wait for the reset, or paste the saved brief into a different model family"]],"When stuck, describe the stuckness to the AI."]]]
+];
+const chip=(t,x='')=>{let c='';const m=t.match(/^([ahcw]):(.*)/);if(m){c=m[1];t=m[2]}const [a,b]=t.split('|');return `<div class="chip ${c} ${x}">${a}${b?`<small>${b}</small>`:''}</div>`};
+const AR='<span class="ar">→</span>';
+let nav='',html='';
+S.forEach(([sec,items],i)=>{nav+=`<a href="#s${i}">${sec.split(':')[0]}</a>`;html+=`<h2 id="s${i}">${sec}</h2>`;
+items.forEach(it=>{const [t,w,k]=it;let b='',n='',l=false;
+if(k=='chain'){b=`<div class="chain">${it[3].map(x=>chip(x)).join(AR)}</div>`;n=it[4]||'';l=it[5]=='loop'}
+if(k=='fan'){n=it[5]||'';b=`<div class="fan">${chip(it[3])}<span class="ar">→</span><div class="br">${it[4].map(([a,c])=>`<div class="row">${chip(a)}${AR}${chip(c)}</div>`).join('')}</div></div>`}
+if(k=='map'){n=it[4]||'';b=it[3].map(([a,c])=>`<div class="row">${chip(a)}${AR}${chip(c)}</div>`).join('')}
+html+=`<div class="card"><div class="where">${w}</div><h3>${t}</h3>${n?`<p class="note">${n}</p>`:'<div style="height:8px"></div>'}${b}${l?'<div class="loop">\u21ba then round again</div>':''}</div>`})});
+document.getElementById('nav').innerHTML=nav;document.getElementById('app').innerHTML=html;
+</script></body></html>
